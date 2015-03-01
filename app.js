@@ -15,9 +15,9 @@ var server = http.createServer(function(req, res){
 			var deviceAgent = req.headers['user-agent'].toLowerCase(); 
 			var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/); 
 			if(agentID){
-				serve(__dirname + '/index.html', 'text/html');
-			}else{
 				serve(__dirname + '/shake.html', 'text/html');
+			}else{
+				serve(__dirname + '/index.html', 'text/html');
 			}
 		}else if('/images/' == req.url.substr(0,8)){
 			serve(__dirname + req.url, 'image/png');
