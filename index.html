@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>酷鱼网｜摇一摇</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <style type="text/css">
+            *{margin:0px;padding:0px;}
+            body{background:#292d2e;}
+            .hand{width:190px; height: 194px; background:url(/images/hand.png)no-repeat; position: absolute; top: 50px; left: 50%; margin-left: -95px;-webkit-animation: handMove infinite 2s;}
+            .result{background: #393B3C; border: #2C2C2C 1px solid; box-shadow: inset #4D4F50 0 0 0 1px; border-radius: 10px; color: #fff; padding: 10px; width: 300px; position: absolute; top: 300px; left: 50%; margin-left: -161px; opacity: 0;-webkit-transition: all 1s;transition: all 1s;}
+            .result .pic{width: 50px; height: 50px; float: left; background: #fff;}
+            .result .pic img{width: 48px; height: 48px;padding: 1px;}
+            .result .con{overflow: hidden; zoom: 1; padding-left: 10px; line-height: 24px;}
+            .result-show{opacity: 1; margin-top: 50px;}
+            .loading{position: absolute; top: 240px; left: 50%; margin-left: -50px; width: 100px; height: 100px; background: url(/images/spinner.png) no-repeat; background-size: 100px 100px; opacity: 0;-webkit-animation: loading infinite linear .5s;}
+            .loading-show{opacity: 1;}
+
+            @-webkit-keyframes handMove{
+                0%{
+                    -webkit-transform: rotate(0);
+                    transform: rotate(0); 
+                }
+                50%{
+                    -webkit-transform: rotate(15deg);
+                    transform: rotate(15deg);
+                }
+                100%{
+                    -webkit-transform: rotate(0);
+                    transform: rotate(0); 
+                }
+            }
+            @-webkit-keyframes loading{
+                0%{
+                    -webkit-transform: rotate(0);
+                    transform: rotate(0); 
+                }
+                100%{
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg); 
+                }
+            }
+        </style>
+        <script type="text/javascript">
+        window.onload = function(){
+            var lastTime = 0;
+            var x = y = z = lastX = lastY = lastZ = 0;
+            var shakeSpeed = 800;
+
+            if(window.DeviceMotionEvent){
+                window.addEventListener('devicemotion', shake, false);
+            }else{
+                alert('本设备不支持摇一摇功能');
+                return;
+            }
+
+            function shake(eventDate){
+                //获取设备加速度信息 
+                var acceleration = eventDate.accelerationIncludingGravity;
+                var nowTime = new Date().getTime();
+                //如果这次摇的时间距离上次摇的时间有一定间隔 才执行
+                if(nowTime - lastTime > 100){
+                    var diffTime = nowTime - lastTime;
+                    lastTime = nowTime;
+                    x = acceleration.x;
+                    y = acceleration.y;
+                    z = acceleration.z;
+                    var speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 10000;
+                    if(speed > shakeSpeed){
+                        showResult();
+                    }
+                    lastX = x;
+                    lastY = y;
+                    lastZ = z;
+                }
+            }
+
+            function showResult(){
+                document.getElementById("result").className = 'result';
+                document.getElementById("loading").className = 'loading loading-show';
+                setTimeout(function(){
+                    document.getElementById("result").className = 'result result-show';
+                    document.getElementById("loading").className = 'loading';
+                }, 1000);
+
+            }
+        };
+        </script>
+    </head>
+    <body>
+        <div id="hand" class="hand"></div>
+        <div id="loading" class="loading"></div>
+        <div id="result" class="result">
+            <div class="pic"><img src="http://www.coolfishstudio.com/images/yves.png"></div>
+            <div class="con">摇晃结果<br/>恭喜你摇到了本大帅哥。</div>
+        </div>
+    </body>
+</html>
